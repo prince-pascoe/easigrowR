@@ -21,6 +21,8 @@ read_easigrow <- function(filename) {
     result_line <- readLines(con, n = 1L)
 
     if (is_empty(result_line)) {
+      easigrow_results = NULL
+      print("No results. Check error.txt")
       break
     }
 
@@ -29,16 +31,18 @@ read_easigrow <- function(filename) {
       easigrow_results <- tibble(Block = numeric(), a = numeric())
       result_line <- readLines(con, n = 1L)
 
-      while (!str_detect(result_line, "Failure Event")) {
+      while (!str_detect(result_line, "Failure Event") && !str_detect(result_line, "Run stopped")) {
 
-        refined_line <- str_extract(result_line, "\\S+\\s+\\S+")
+        if (str_detect(result_line, "\\d\\s+\\d")) {
 
-        block_val <- as.double(str_extract(refined_line, "\\S+(?=\\s)"))
-        a_val <- as.double(str_extract(refined_line, "\\S+$"))
+          refined_line <- str_extract(result_line, "\\S+\\s+\\S+")
 
-        easigrow_results %<>%
-          add_row(Block = block_val, a = a_val)
+          block_val <- as.double(str_extract(refined_line, "\\S+(?=\\s)"))
+          a_val <- as.double(str_extract(refined_line, "\\S+$"))
 
+          easigrow_results %<>%
+            add_row(Block = block_val, a = a_val)
+        }
         result_line <- readLines(con, n = 1L)
       }
       break

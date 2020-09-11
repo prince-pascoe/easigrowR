@@ -4,16 +4,21 @@
 \alias{run_easigrow}
 \title{Easigrow}
 \usage{
-run_easigrow(filename, scale, flags = NULL, options = NULL)
+run_easigrow(seq_filename, res_filename, scale, flags = NULL, options = NULL)
 }
 \arguments{
-\item{filename}{Text file with normalised stress spectrum}
+\item{seq_filename}{Text file with normalised stress spectrum}
+
+\item{res_filename}{Text file with results of simulation}
 
 \item{scale}{Peak stress value for the spectrum (MPa)}
 
 \item{flags}{String containing flag specifiers for the simulation}
 
 \item{options}{String containing option specifiers for the simulation}
+}
+\value{
+A tibble with the block and crack growth sizes
 }
 \description{
 Executes easigrow for crack growth measurement

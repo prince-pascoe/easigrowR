@@ -2,12 +2,14 @@
 #'
 #' @description Executes easigrow for crack growth measurement
 #'
-#' @param filename Text file with normalised stress spectrum
+#' @param seq_filename Text file with normalised stress spectrum
+#' @param res_filename Text file with results of simulation
 #' @param scale Peak stress value for the spectrum (MPa)
 #' @param flags String containing flag specifiers for the simulation
-
-#'
 #' @param options String containing option specifiers for the simulation
+#'
+#' @return A tibble with the block and crack growth sizes
+#'
 #' @details
 #' Flag specifiers include:
 #' \itemize{
@@ -64,19 +66,18 @@
 #' }
 #' @export
 
-run_easigrow <- function(filename, scale, flags = NULL, options = NULL) {
+run_easigrow <- function(seq_filename,res_filename, scale, flags = NULL, options = NULL) {
 
-  cmd = paste("-q", filename,
-              "-s", scale,
+  cmd = paste("-q", seq_filename,
               flags,
-              "-b", "dsht-bowie56",
-              "-r", options,
+              "-s", scale,
+              options,
               sep = " ")
 
-  system2("easigrow", args = cmd, stdout = "results.txt", stderr = "error.txt")
+  system2("easigrow", args = cmd, stdout = res_filename, stderr = "error.txt")
 
-  if (file.info("results.txt")$size != 0) {
-    return(read_easigrow("results.txt"))
+  if (file.info(res_filename)$size != 0) {
+    return(read_easigrow(res_filename))
   } else {
     stop("Easigrow encountered errors, see error.txt")
   }

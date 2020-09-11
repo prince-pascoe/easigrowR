@@ -11,7 +11,7 @@
 #' @export
 
 
-write_easigrow <- function(x, filename, ...) UseMethod("write_txt")
+write_easigrow <- function(x, filename, ...) UseMethod("write_easigrow")
 
 write_easigrow.default <- function(x, filename, ...) {
 
@@ -20,7 +20,7 @@ write_easigrow.default <- function(x, filename, ...) {
   }
 
   x %>%
-    divide_by(max(x)) %>%
+    round(digits = 4) %>%
     as.data.frame() %>%
     write_delim(filename, delim = "\n", na = "NA", append = FALSE,
                 col_names = FALSE, quote_escape = "double")
@@ -37,7 +37,7 @@ write_easigrow.data.frame <- function(x, filename, ...) {
   }
 
   x %>%
-    divide_by(max(x)) %>%
+    round(digits = 4) %>%
     write_delim(filename, delim = "\n", na = "NA", append = FALSE,
                 col_names = FALSE, quote_escape = "double")
 
